@@ -11,11 +11,11 @@ public class Main{
         frame.setSize(1020,1040);
         frame.setVisible(true);
         int[] netStruct = new int[]{24,18,18,4};
-        int snakesPerGen = 10;
+        int snakesPerGen = 20;
         GenerationManager gen = new GenerationManager(netStruct,snakesPerGen);
         int numGens = 50;
         int numTimesNetworkTested = 3;
-        boolean showSnake = true;
+        boolean showSnake = false;
         for(int a = 0; a < numGens; a++){
             for(NeuralNetwork nn: gen.Generation){
                 double avFit = 0;
@@ -75,8 +75,8 @@ public class Main{
             try{
                 Thread.sleep(100);
             }
-                catch(Exception e){
-                    System.out.println(e);
+            catch(Exception e){
+                System.out.println(e);
             }
             double[] outputs = gen.best.forwardPropagate(snake.getInputs());
             int largestIndex = 0;
@@ -100,7 +100,7 @@ public class Main{
             snake.checkCollide();
             if(showSnake)
                 screen.draw();
-                    }
+        }
         /*
         while(snake.getIsAlive()){
             try{
