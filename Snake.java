@@ -5,10 +5,10 @@ public class Snake{
     private boolean isAlive;
     private int[] foodCords;
     private double score;
-    private int numMoves;
-    private int maxNumMoves;
+    private double numMoves;
+    private double maxNumMoves;
     public Snake(){
-        maxNumMoves = 50;
+        maxNumMoves = 200;
         reset();
     }
     public void reset(){
@@ -18,7 +18,7 @@ public class Snake{
         s.get(0).setConnectedTo(s.get(1));
         s.add(new snakeBody(8,10));
         s.get(1).setConnectedTo(s.get(2));
-        direction = "east";
+        direction = "west";
         isAlive = true; 
         foodCords = new int[2];
         setRandFoodCords();  
@@ -44,15 +44,15 @@ public class Snake{
                         x += xs;
                         y += ys;
                         if(vals[count*3] == 0 && (x == 50 || y  == 50 || x == 0 || y == 0)){
-                            System.out.println("wall found");
+                            //System.out.println("wall found");
                             vals[count*3] = Math.sqrt(Math.abs((x-s.get(0).getX())*(x-s.get(0).getX())) + Math.abs((y-s.get(0).getY())*(y-s.get(0).getY())))/maxOutsideDis;
                         }
                         else if(vals[count*3+1] == 0 && x == foodCords[0] && y == foodCords[1]){
-                            System.out.println("food found");
+                            //System.out.println("food found");
                             vals[count*3+1] = Math.sqrt(Math.abs((x-s.get(0).getX())*(x-s.get(0).getX())) + Math.abs((y-s.get(0).getY())*(y-s.get(0).getY())))/maxInsideDis;
                         }
                         else if(vals[count*3+2] == 0 && contains(x,y)){
-                            System.out.println("body found");
+                            //System.out.println("body found");
                             vals[count*3+2] = Math.sqrt(Math.abs((x-s.get(0).getX())*(x-s.get(0).getX())) + Math.abs((y-s.get(0).getY())*(y-s.get(0).getY())))/maxInsideDis;
                         }
                     }
@@ -86,6 +86,7 @@ public class Snake{
         return score;
     }
     public void grow(){
+        numMoves = 0;
         int x = s.get(s.size()-1).getX();
         int y = s.get(s.size()-1).getY();
         moveSnake();
@@ -101,7 +102,7 @@ public class Snake{
         }
         if(s.get(0).getX() == 0 || s.get(0).getX() == 49 || s.get(0).getY() == 0 || s.get(0).getY() == 49){
             isAlive = false;
-            score -= 5;
+            score -= 5*((maxNumMoves-numMoves)/maxNumMoves);
         }
         for(int i = 1; i < s.size(); i++){
             if(s.get(i).getX() == s.get(0).getX() && s.get(i).getY() == s.get(0).getY()){
@@ -125,25 +126,25 @@ public class Snake{
         return isAlive;
     }
     public void setDirection(String d){
-        if(d.equals("north") && !direction.equals("south")){
+        if(d.equals("north") && s.get(1).getY() >= s.get(0).getY()){
             direction = d;
         }
-        else if(d.equals("south") && !direction.equals("north")){
+        else if(d.equals("south") && s.get(1).getY() <= s.get(0).getY()){
             direction = d;
         }
-        else if(d.equals("east") && !direction.equals("west")){
+        else if(d.equals("east") && s.get(1).getX() >= s.get(0).getX()){
             direction = d;
         }
-        else if(d.equals("west") && !direction.equals("east")){
+        else if(d.equals("west") && s.get(1).getX() <= s.get(0).getX()){
             direction = d;
         }
     }
     private void moveSnake(){
         if(direction.equals("west")){
-            s.get(0).move(s.get(0).getX()-1,s.get(0).getY()); 
+            s.get(0).move(s.get(0).getX()+1,s.get(0).getY()); 
         }
         else if(direction.equals("east")){
-            s.get(0).move(s.get(0).getX()+1,s.get(0).getY()); 
+            s.get(0).move(s.get(0).getX()-1,s.get(0).getY()); 
         }
         else if(direction.equals("north")){
             s.get(0).move(s.get(0).getX(),s.get(0).getY()-1); 

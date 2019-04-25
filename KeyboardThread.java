@@ -10,13 +10,13 @@ public class KeyboardThread extends KeyAdapter{
             s.setDirection("north");
         }
         if(key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT){
-            s.setDirection("east");
+            s.setDirection("west");
         }
         if(key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN){
             s.setDirection("south");
         }
         if(key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT){
-            s.setDirection("west");
+            s.setDirection("east");
         }
     }
 }
