@@ -41,19 +41,20 @@ public class GenerationManager{
     }
     public void crossGeneration(){
         sortGen();
+        if(Generation.get(0).getFitness() > best.getFitness()){
+            best = Generation.get(0);
+            System.out.println("Best: "+best.getFitness());
+        }
         ArrayList<NeuralNetwork> newGen = new ArrayList<NeuralNetwork>();
         int numNewNetworks = 2;
         for(int i = 0; i < numNewNetworks; i++){
             newGen.add(new NeuralNetwork(struct));
-        }
+        } 
         for(int i = 0; i < Generation.size()-numNewNetworks; i++){
-           newGen.add(cross(Generation.get(i%5),Generation.get((int)(Math.random()*Generation.size()))));
+           newGen.add(cross(Generation.get(i%10),Generation.get((int)(Math.random()*Generation.size()))));
         }
         Generation = newGen;
         genNum += 1;
-        if(Generation.get(0).getFitness() > best.getFitness()){
-            best = Generation.get(0);
-        }
     }
     public NeuralNetwork cross(NeuralNetwork x, NeuralNetwork y){
         NeuralNetwork temp = new NeuralNetwork(struct);

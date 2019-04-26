@@ -2,8 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 public class Display extends JComponent{
     Snake snake;
-    public Display(Snake s){
+    GenerationManager genMan;
+    public Display(Snake s, GenerationManager gm){
         snake = s;
+        genMan = gm;
     }
     public void draw(){
         this.repaint();
@@ -24,6 +26,8 @@ public class Display extends JComponent{
         g.fillRect(snake.getFoodCords()[0]*20,snake.getFoodCords()[1]*20,20,20);
         g.setColor(Color.BLACK);
         g.drawRect(snake.getFoodCords()[0]*20,snake.getFoodCords()[1]*20,20,20);
-        g.drawString("Score: "+(snake.getSnake().size()-3),40,40);
+        g.drawString("Score: "+(snake.score),40,40);
+        g.drawString("Generation : "+ genMan.genNum,40,60);
+        g.drawString("Closest : "+ snake.closest,40,80);
     }
 }

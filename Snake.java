@@ -4,19 +4,23 @@ public class Snake{
     private String direction;
     private boolean isAlive;
     private int[] foodCords;
-    private double score;
+    double score;
     private double numMoves;
     private double maxNumMoves;
+    double closest;
+    private String prevMove;
+    private double[] prevSpot;
     public Snake(){
-        maxNumMoves = 200;
+        maxNumMoves = 400;
         reset();
     }
     public void reset(){
         s = new ArrayList<snakeBody>();
-        s.add(new snakeBody(10,10));
-        s.add(new snakeBody(9,10));
+        prevSpot = new double[]{10,10};
+        s.add(new snakeBody((int)(Math.random()*45+3),(int)(Math.random()*45+3)));
+        s.add(new snakeBody(s.get(0).getX()-1,s.get(0).getY()));
         s.get(0).setConnectedTo(s.get(1));
-        s.add(new snakeBody(8,10));
+        s.add(new snakeBody(s.get(1).getX()-1,s.get(1).getY()));
         s.get(1).setConnectedTo(s.get(2));
         direction = "west";
         isAlive = true; 
@@ -24,9 +28,14 @@ public class Snake{
         setRandFoodCords();  
         score = 0;
         numMoves = 0;
+        prevMove = "west";
+        closest = 60;
     }
     public int[] getFoodCords(){
         return foodCords;
+    }
+    public double getDis(int x1, int y1,int x2,int y2){
+        return Math.sqrt(Math.abs((x2-x1)*(x2-x1)) + Math.abs((y2-y1)*(y2-y1)));
     }
     public double[] getInputs(){
         double[] vals = new double[24];
@@ -43,15 +52,24 @@ public class Snake{
                     while(y >= 0 && y <= 50 && x >= 0 && x <= 50){                        
                         x += xs;
                         y += ys;
-                        if(vals[count*3] == 0 && (x == 50 || y  == 50 || x == 0 || y == 0)){
+                        if(vals[count*3] == 0){
+                            vals[count*3] = 1;
+                        }
+                        if(vals[count*3+1] == 0){
+                            vals[count*3+1] = 1;
+                        }
+                        if(vals[count*3+2] == 0){
+                            vals[count*3+2] = 1;
+                        }
+                        if(vals[count*3] == 1 && (x == 50 || y  == 50 || x == 0 || y == 0)){
                             //System.out.println("wall found");
                             vals[count*3] = Math.sqrt(Math.abs((x-s.get(0).getX())*(x-s.get(0).getX())) + Math.abs((y-s.get(0).getY())*(y-s.get(0).getY())))/maxOutsideDis;
                         }
-                        else if(vals[count*3+1] == 0 && x == foodCords[0] && y == foodCords[1]){
+                        else if(vals[count*3+1] == 1 && x == foodCords[0] && y == foodCords[1]){
                             //System.out.println("food found");
                             vals[count*3+1] = Math.sqrt(Math.abs((x-s.get(0).getX())*(x-s.get(0).getX())) + Math.abs((y-s.get(0).getY())*(y-s.get(0).getY())))/maxInsideDis;
                         }
-                        else if(vals[count*3+2] == 0 && contains(x,y)){
+                        else if(vals[count*3+2] == 1 && contains(x,y)){
                             //System.out.println("body found");
                             vals[count*3+2] = Math.sqrt(Math.abs((x-s.get(0).getX())*(x-s.get(0).getX())) + Math.abs((y-s.get(0).getY())*(y-s.get(0).getY())))/maxInsideDis;
                         }
@@ -93,16 +111,18 @@ public class Snake{
         s.add(new snakeBody(x,y));
         s.get(s.size()-2).setConnectedTo(s.get(s.size()-1));
         setRandFoodCords();
-        score += 10;
+        score += 30*(s.size()-3);
+        closest = getDis(s.get(0).getX(),s.get(0).getX(),foodCords[0],foodCords[1]);
     }
     public void checkCollide(){
         numMoves ++;
         if(numMoves >= maxNumMoves){
             isAlive = false;
+            //score += 10;
         }
         if(s.get(0).getX() == 0 || s.get(0).getX() == 49 || s.get(0).getY() == 0 || s.get(0).getY() == 49){
             isAlive = false;
-            score -= 5*((maxNumMoves-numMoves)/maxNumMoves);
+            score -= 100*((maxNumMoves-numMoves)/maxNumMoves);
         }
         for(int i = 1; i < s.size(); i++){
             if(s.get(i).getX() == s.get(0).getX() && s.get(i).getY() == s.get(0).getY()){
@@ -140,6 +160,10 @@ public class Snake{
         }
     }
     private void moveSnake(){
+        if(!direction.equals(prevMove)){
+            score += 5;
+        }
+        prevMove = direction;
         if(direction.equals("west")){
             s.get(0).move(s.get(0).getX()+1,s.get(0).getY()); 
         }
@@ -152,5 +176,13 @@ public class Snake{
         else{
             s.get(0).move(s.get(0).getX(),s.get(0).getY()+1); 
         }
+        if(getDis(s.get(0).getX(),s.get(0).getY(),foodCords[0],foodCords[1]) < closest){
+            score += 5;
+            closest = getDis(s.get(0).getX(),s.get(0).getX(),foodCords[0],foodCords[1]);
+        }
+        if(getDis(s.get(0).getX(),s.get(0).getY(),foodCords[0],foodCords[1]) > getDis((int)prevSpot[0],(int)prevSpot[1],foodCords[0],foodCords[1])){
+            score -= 10;
+        }
+        prevSpot = new double[]{s.get(0).getX(),s.get(0).getY()};
     }
 }

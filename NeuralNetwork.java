@@ -35,7 +35,7 @@ public class NeuralNetwork{
                 }
             }
             for(int b = 0; b < inputs.get(a+1).length; b++){
-                inputs.get(a+1)[b] = sigmoid(inputs.get(a+1)[b]);
+                inputs.get(a+1)[b] = rely(inputs.get(a+1)[b]);
             }
         }
         return inputs.get(inputs.size()-1);
@@ -54,5 +54,8 @@ public class NeuralNetwork{
     }
     private double sigmoid(double val){
         return 1 / (1 + Math.exp(-val));
+    }
+    private double rely(double ret){
+        return ret;
     }
 }
