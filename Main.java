@@ -5,7 +5,7 @@ public class Main{
         Snake snake = new Snake();
         
         int[] netStruct = new int[]{24,18,18,4};
-        int snakesPerGen = 300;
+        int snakesPerGen = 200;
         int numGens = 200;
         int numTimesNetworkTested = 4;
         

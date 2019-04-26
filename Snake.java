@@ -122,7 +122,7 @@ public class Snake{
         }
         if(s.get(0).getX() == 0 || s.get(0).getX() == 49 || s.get(0).getY() == 0 || s.get(0).getY() == 49){
             isAlive = false;
-            score -= 100*((maxNumMoves-numMoves)/maxNumMoves);
+            score -= 500*((maxNumMoves-numMoves)/maxNumMoves);
         }
         for(int i = 1; i < s.size(); i++){
             if(s.get(i).getX() == s.get(0).getX() && s.get(i).getY() == s.get(0).getY()){
@@ -160,9 +160,11 @@ public class Snake{
         }
     }
     private void moveSnake(){
+        /*
         if(!direction.equals(prevMove)){
-            score += 5;
+            score += 2;
         }
+        */
         prevMove = direction;
         if(direction.equals("west")){
             s.get(0).move(s.get(0).getX()+1,s.get(0).getY()); 
@@ -176,10 +178,12 @@ public class Snake{
         else{
             s.get(0).move(s.get(0).getX(),s.get(0).getY()+1); 
         }
+        /*
         if(getDis(s.get(0).getX(),s.get(0).getY(),foodCords[0],foodCords[1]) < closest){
-            score += 5;
+            score += 1;
             closest = getDis(s.get(0).getX(),s.get(0).getX(),foodCords[0],foodCords[1]);
         }
+        */
         if(getDis(s.get(0).getX(),s.get(0).getY(),foodCords[0],foodCords[1]) > getDis((int)prevSpot[0],(int)prevSpot[1],foodCords[0],foodCords[1])){
             score -= 10;
         }
