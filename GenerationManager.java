@@ -7,6 +7,10 @@ public class GenerationManager{
     int[] struct;
     //Number of networks per generation
     int networksPerGen;
+    double percentRandom;
+    double topPercentKept;
+    double weightMutationChance;
+    double percentMutated;
     //Generation number
     int genNum = 1;
     public GenerationManager(int[] s,int npg){
@@ -15,6 +19,8 @@ public class GenerationManager{
         networksPerGen = npg;
         createNewGeneration();
         best = Generation.get(0);
+        percentRandom = 0.1;
+        topPercentKept = 0.2;
     }
     public void createNewGeneration(){
         for(int i = 0; i < networksPerGen; i++){
@@ -46,15 +52,39 @@ public class GenerationManager{
             System.out.println("Best: "+best.getFitness());
         }
         ArrayList<NeuralNetwork> newGen = new ArrayList<NeuralNetwork>();
-        int numNewNetworks = 2;
+        int numNewNetworks = (int)(Generation.size()*percentRandom);
+        int numKeptNetworks = (int)(Generation.size()*topPercentKept);
+        //System.out.println(numNewNetworks);
+        for(int a = 0; a < numKeptNetworks; a++){
+            newGen.add(copyNet(Generation.get(a)));
+        }
         for(int i = 0; i < numNewNetworks; i++){
             newGen.add(new NeuralNetwork(struct));
         } 
-        for(int i = 0; i < Generation.size()-numNewNetworks; i++){
+        newGen.add(copyNet(best));
+        for(int i = 1; i < Generation.size()-numNewNetworks-numKeptNetworks; i++){
            newGen.add(cross(Generation.get(i%10),Generation.get((int)(Math.random()*Generation.size()))));
         }
         Generation = newGen;
         genNum += 1;
+    }
+    public NeuralNetwork mutate(NeuralNetwork nn){
+        NeuralNetwork mutated = new NeuralNetwork(nn.getStruct());
+        ArrayList<double[][]> w = new ArrayList<double[][]>();
+        for(int a = 0; a < nn.getWeights().size();a++){
+            w.add(nn.getWeights().get(a));
+        }
+        mutated.setWeights(w);
+        return mutated;
+    }
+    public NeuralNetwork copyNet(NeuralNetwork nn){
+        ArrayList<double[][]> w = new ArrayList<double[][]>();
+        for(int a = 0; a < nn.getWeights().size(); a++){
+            w.add(nn.getWeights().get(a));
+        } 
+        NeuralNetwork nn2 = new NeuralNetwork(nn.getStruct());
+        nn2.setWeights(w);
+        return nn2;
     }
     public NeuralNetwork cross(NeuralNetwork x, NeuralNetwork y){
         NeuralNetwork temp = new NeuralNetwork(struct);

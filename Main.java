@@ -5,10 +5,23 @@ public class Main{
         Snake snake = new Snake();
         
         int[] netStruct = new int[]{24,18,18,4};
-        int snakesPerGen = 200;
+        int snakesPerGen = 300;
         int numGens = 200;
         int numTimesNetworkTested = 4;
-        
+        int graphwidth = 400;
+        int graphheight = 420;
+        /*
+        JFrame bestograph = new JFrame("Best score overall");
+        bestograph.setSize(graphwidth,graphheight);
+        bestograph.setResizable(false);
+        bestograph.setVisible(true);
+        bestograph.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        StatisticsGraph bog = new StatisticsGraph(bestograph,graphwidth,graphheight);
+        bestograph.add(bog);
+        bog.setVisible(true);
+        bog.addPoint(0,0);
+        bog.redraw();
+        */
         GenerationManager gen = new GenerationManager(netStruct,snakesPerGen);
         Display screen = new Display(snake,gen);
         frame.add(screen);
@@ -67,6 +80,8 @@ public class Main{
                 //System.out.println("Network Fitness: "+nn.getFitness());
             }
             gen.crossGeneration();
+            //bog.addPoint(gen.genNum,gen.best.getFitness());
+            //bog.redraw();
             //System.out.println("Best: "+gen.best.getFitness());
         }
         System.out.println("Complete training");
@@ -100,6 +115,7 @@ public class Main{
                 }
                 snake.checkCollide();
                 screen.draw();
+                
                 if(showSnake)
                     screen.draw();
             }

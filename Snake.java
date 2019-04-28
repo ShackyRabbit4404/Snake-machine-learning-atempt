@@ -52,24 +52,15 @@ public class Snake{
                     while(y >= 0 && y <= 50 && x >= 0 && x <= 50){                        
                         x += xs;
                         y += ys;
-                        if(vals[count*3] == 0){
-                            vals[count*3] = 1;
-                        }
-                        if(vals[count*3+1] == 0){
-                            vals[count*3+1] = 1;
-                        }
-                        if(vals[count*3+2] == 0){
-                            vals[count*3+2] = 1;
-                        }
-                        if(vals[count*3] == 1 && (x == 50 || y  == 50 || x == 0 || y == 0)){
+                        if(vals[count*3] == 0 && (x == 50 || y  == 50 || x == 0 || y == 0)){
                             //System.out.println("wall found");
                             vals[count*3] = Math.sqrt(Math.abs((x-s.get(0).getX())*(x-s.get(0).getX())) + Math.abs((y-s.get(0).getY())*(y-s.get(0).getY())))/maxOutsideDis;
                         }
-                        else if(vals[count*3+1] == 1 && x == foodCords[0] && y == foodCords[1]){
+                        else if(vals[count*3+1] == 0 && x == foodCords[0] && y == foodCords[1]){
                             //System.out.println("food found");
                             vals[count*3+1] = Math.sqrt(Math.abs((x-s.get(0).getX())*(x-s.get(0).getX())) + Math.abs((y-s.get(0).getY())*(y-s.get(0).getY())))/maxInsideDis;
                         }
-                        else if(vals[count*3+2] == 1 && contains(x,y)){
+                        else if(vals[count*3+2] == 0 && contains(x,y)){
                             //System.out.println("body found");
                             vals[count*3+2] = Math.sqrt(Math.abs((x-s.get(0).getX())*(x-s.get(0).getX())) + Math.abs((y-s.get(0).getY())*(y-s.get(0).getY())))/maxInsideDis;
                         }
@@ -122,7 +113,7 @@ public class Snake{
         }
         if(s.get(0).getX() == 0 || s.get(0).getX() == 49 || s.get(0).getY() == 0 || s.get(0).getY() == 49){
             isAlive = false;
-            score -= 500*((maxNumMoves-numMoves)/maxNumMoves);
+            score -= 500;
         }
         for(int i = 1; i < s.size(); i++){
             if(s.get(i).getX() == s.get(0).getX() && s.get(i).getY() == s.get(0).getY()){
@@ -160,11 +151,9 @@ public class Snake{
         }
     }
     private void moveSnake(){
-        /*
         if(!direction.equals(prevMove)){
-            score += 2;
+            score += 1;
         }
-        */
         prevMove = direction;
         if(direction.equals("west")){
             s.get(0).move(s.get(0).getX()+1,s.get(0).getY()); 
@@ -180,12 +169,12 @@ public class Snake{
         }
         /*
         if(getDis(s.get(0).getX(),s.get(0).getY(),foodCords[0],foodCords[1]) < closest){
-            score += 1;
-            closest = getDis(s.get(0).getX(),s.get(0).getX(),foodCords[0],foodCords[1]);
+            score += 6;
+            closest = getDis(s.get(0).getX(),s.get(0).getY(),foodCords[0],foodCords[1]);
         }
         */
         if(getDis(s.get(0).getX(),s.get(0).getY(),foodCords[0],foodCords[1]) > getDis((int)prevSpot[0],(int)prevSpot[1],foodCords[0],foodCords[1])){
-            score -= 10;
+            score -= 15;
         }
         prevSpot = new double[]{s.get(0).getX(),s.get(0).getY()};
     }

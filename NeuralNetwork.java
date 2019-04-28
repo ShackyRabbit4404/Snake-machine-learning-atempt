@@ -3,7 +3,9 @@ public class NeuralNetwork{
     private ArrayList<double[][]> weights;
     private int[] NetworkFrame;
     private double fitness;
+    private int[] struct;
     public NeuralNetwork(int[] netFrame){
+        struct = netFrame;
         weights = new ArrayList<double[][]>();
         NetworkFrame = netFrame;
         fitness = 0;
@@ -17,6 +19,9 @@ public class NeuralNetwork{
                 }
             }
         }
+    }
+    public int[] getStruct(){
+        return struct;
     }
     public double[] forwardPropagate(double[] input){
         ArrayList<double[]> inputs = new ArrayList<double[]>();
@@ -39,6 +44,17 @@ public class NeuralNetwork{
             }
         }
         return inputs.get(inputs.size()-1);
+    }
+    public void print(){
+        for(double[][] a: weights){
+            for(double[] b: a){
+                for(double c: b){
+                    System.out.print(c+" ");
+                }
+                System.out.println();
+            }
+            System.out.println("\n");
+        }
     }
     public void setFitness(double f){
         fitness = f;
